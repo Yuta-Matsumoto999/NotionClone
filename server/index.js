@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const CryptoJS = require("crypto-js");
+const { body, validationResult } = require('express-validator');
 const JWT = require("jsonwebtoken");
 const User = require("./src/v1/models/user")
 const app = express();
@@ -18,7 +19,27 @@ try {
 }
 
 // ユーザー新規登録用API
-app.post("/register", async (req, res) => {
+app.post(
+    "/register", 
+    body("username").isLength({ min: 8 }).withMessage("ユーザー名は、8文字以上である必要があります。"),
+    body("password").isLength({ min: 8 }).withMessage("パスワードは、8文字以上である必要があります。"),
+    body("confirmPassword").isLength({ min: 8 }).withMessage("確認用パスワードは、8文字以上である必要があります。"),
+    body("username").custom((value) => {
+        return  User.findOne({ username: value }).then((user) => {
+            if(user) {
+                return Promise.reject("このユーザーは既に使われています。");
+            }
+        });
+    }),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if(!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    },
+    async (req, res) => {
+
     // パスワードの受け取り
     const password = req.body.password;
 
