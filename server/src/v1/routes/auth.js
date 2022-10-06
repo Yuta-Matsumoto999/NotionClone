@@ -5,6 +5,7 @@ const CryptoJS = require("crypto-js");
 const JWT = require("jsonwebtoken");
 const validation = require("../handlers/validation")
 const userController = require("../controllers/user");
+const tokenHandler = require("../handlers/tokenHandler");
 require("dotenv").config();
 
 
@@ -33,5 +34,16 @@ router.post(
     validation.validate,
     userController.login
 );
+
+// JWT認証API
+router.post(
+    "/verify-token",
+    tokenHandler.verifyToken,
+    (req, res) => {
+    return res.status(200).json({
+        user: req.user
+    })
+});
+
 
 module.exports = router;
