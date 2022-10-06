@@ -25,3 +25,45 @@ exports.register = async (req, res) => {
         res.status(500).json(err);
     }
 }
+
+exports.login = async (req, res) => {
+
+    const {username, password} = req.body;
+    try {
+        // DBからuerの存在を探す
+        const user = await User.findOne({username: username});
+        
+        if(!user) {
+            return res.status(401).json({
+                errors: {
+                    param: username,
+                    message: "ユーザーが無効です。"
+                }
+            })
+        }
+
+        // パスワードの照合
+        const decryptedPassword = CryptoJS.AES.decrypt(
+            user.password,
+            process.env.TOKEN_SECRET_KEY
+        ).toString(CryptoJS.enc.Utf8);
+        
+        if(decryptedPassword !== password) {
+            return res.status(401).json({
+                errors: {
+                    param: password,
+                    message: "パスワードが無効です。"
+                }
+            });
+        }
+
+        // JWTを発行
+        const token = JWT.sign({ id: user._id }, process.env.TOKEN_SECRET_KEY, {
+            expiresIn: "24h",
+        });
+        return res.status(201).json({user, token});
+
+    } catch (err) {
+        return res.status(500).json(err);
+    }
+}
