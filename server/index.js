@@ -3,7 +3,13 @@ const app = express();
 const PORT = 5050;
 const mongoose = require("mongoose");
 require("dotenv").config();
+var cors = require('cors');
 
+// corsエラーの回避設定
+app.use(cors({
+    origin: "http://localhost:3000",
+
+}))
 // json形式を読み込めるように設定
 app.use(express.json());
 
