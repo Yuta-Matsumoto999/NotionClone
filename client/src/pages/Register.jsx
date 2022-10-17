@@ -3,11 +3,24 @@ import React from 'react'
 import { LoadingButton } from "@mui/lab";
 import { Link } from "react-router-dom";
 import authApi from '../api/authApi';
+import { useState } from 'react';
 
 const Register = () => {
+
+  // validationエラーメッセージ用
+  const [usernameErrText, setUsernameErrText] = useState("");
+  const [passwordErrText, setPasswordErrText] = useState("");
+  const [confirmErrText, setConfirmErrText] = useState("");
+  
   const handleSubmit = async (e) => {
-    // 入力されたform情報を取得
     e.preventDefault();
+
+    // validationエラーメッセージの初期化
+    setUsernameErrText("");
+    setPasswordErrText("");
+    setConfirmErrText("");
+
+    // 入力されたform情報を取得
     const data = new FormData(e.target);
     const username = data.get('username').trim();
     const password = data.get('password').trim();
@@ -15,6 +28,33 @@ const Register = () => {
     console.log(username);
     console.log(password);
     console.log(confirmPassword);
+
+    // validation処理開始
+
+    let error = false;
+
+    if(username === "") {
+      error =  true;
+      setUsernameErrText("名前を入力してください。");
+    }
+
+    if(password === "") {
+      error =  true;
+      setPasswordErrText("パスワードを入力してください。");
+    }
+
+    if(confirmPassword === "") {
+      error =  true;
+      setConfirmErrText("確認用パスワードを入力してください。");
+    }
+
+    if(password !== confirmPassword) {
+      error =  true;
+      setConfirmErrText("パスワードと確認用パスワードが一致しません。");
+    }
+
+    // validationエラーが発生した場合には、新規登録処理をストップする。 
+    if(error) return;
 
     // 新規登録APIを叩く
     try {
@@ -29,12 +69,28 @@ const Register = () => {
       console.log("success");
     } catch (err) {
       console.log(err);
+      // サーバーからのvalidationエラーメッセージをセット
+      const errors = err.data.errors;
+
+      errors.forEach((error) => {
+        if(error.param == "username") {
+          setUsernameErrText(error.msg);
+        }
+
+        if(error.param == "password") {
+          setPasswordErrText(error.msg);
+        }
+
+        if(error.param == "confirmPassword") {
+          setConfirmErrText(error.msg);
+        }
+      });
     }
   }
 
   return (
   <>
-    <Box component="form" onSubmit={handleSubmit}>
+    <Box component="form" onSubmit={handleSubmit} noValidate>
       <TextField 
         fullWidth 
         id="username" 
@@ -42,6 +98,8 @@ const Register = () => {
         margin="normal" 
         name="username"
         required
+        helperText={usernameErrText}
+        error={usernameErrText !== ""}
       />
 
       <TextField 
@@ -52,6 +110,8 @@ const Register = () => {
         name="password"
         type="password"
         required
+        helperText={passwordErrText}
+        error={passwordErrText !== ""}
       />
 
       <TextField 
@@ -62,6 +122,8 @@ const Register = () => {
         name="confirmPassword"
         type="password"
         required
+        helperText={confirmErrText}
+        error={confirmErrText !== ""}
       />
 
       <LoadingButton
