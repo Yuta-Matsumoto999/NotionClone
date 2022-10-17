@@ -14,7 +14,7 @@ app.use(cors({
 app.use(express.json());
 
 // エンドポイントのdefaultを記述
-app.use("/api/v1", require("./src/v1/routes/auth"));
+app.use("/api/v1", require("./src/v1/routes"));
 
 // DB接続
 try {
