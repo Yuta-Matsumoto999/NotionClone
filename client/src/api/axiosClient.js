@@ -6,14 +6,15 @@ const getToken = () => {
     localStorage.getItem("token");
 }
 
-const axiosClient =axios.create({
+const axiosClient = axios.create({
     baseURL: BASE_URL
 });
 
 // API request時の前処理を行う
 axiosClient.interceptors.request.use(async (config) =>  {
     return {
-        config,
+        // configへheaderの情報を追加する。
+        ...config,
         headers: {
             "Content-type": "application/json",
             authorization: `Bearer ${getToken()}`,  // request headerにJWTを付けてサーバーに渡す

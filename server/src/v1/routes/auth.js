@@ -3,7 +3,7 @@ const { body, validationResult } = require('express-validator');
 const User = require("../models/user");
 const CryptoJS = require("crypto-js");
 const JWT = require("jsonwebtoken");
-const validation = require("../handlers/validation")
+const validation = require("../handlers/validation");
 const userController = require("../controllers/user");
 const tokenHandler = require("../handlers/tokenHandler");
 require("dotenv").config();
