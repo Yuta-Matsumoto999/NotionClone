@@ -113,6 +113,7 @@ const Register = () => {
         required
         helperText={usernameErrText}
         error={usernameErrText !== ""}
+        disabled={loading}
       />
 
       <TextField 
@@ -125,6 +126,7 @@ const Register = () => {
         required
         helperText={passwordErrText}
         error={passwordErrText !== ""}
+        disabled={loading}
       />
 
       <TextField 
@@ -137,6 +139,7 @@ const Register = () => {
         required
         helperText={confirmErrText}
         error={confirmErrText !== ""}
+        disabled={loading}
       />
 
       <LoadingButton
