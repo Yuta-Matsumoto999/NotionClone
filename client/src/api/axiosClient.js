@@ -24,7 +24,7 @@ axiosClient.interceptors.request.use(async (config) =>  {
 
 // API Response時の前処理を行う
 axiosClient.interceptors.response.use(async (response) => {
-    return response;
+    return response.data;
     }, 
     (err) => {
         throw err.response;
