@@ -1,11 +1,13 @@
 import { Box, Button, TextField } from '@mui/material';
 import React from 'react'
 import { LoadingButton } from "@mui/lab";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import authApi from '../api/authApi';
 import { useState } from 'react';
 
 const Register = () => {
+
+  const navigate = useNavigate();
 
   // validationエラーメッセージ用
   const [usernameErrText, setUsernameErrText] = useState("");
@@ -72,10 +74,13 @@ const Register = () => {
 
       localStorage.setItem("token", res.token);
 
-      console.log("success");
+      console.log("ユーザー新規登録に成功しました。");
 
       // Loadingを終了する
       setLoading(false);
+
+      // Homeへリダイレクト
+      navigate("/");
 
     } catch (err) {
       console.log(err);
