@@ -11,6 +11,9 @@ const Register = () => {
   const [usernameErrText, setUsernameErrText] = useState("");
   const [passwordErrText, setPasswordErrText] = useState("");
   const [confirmErrText, setConfirmErrText] = useState("");
+
+  // Api通信中のLoading処理用
+  const [loading, setLoading] = useState(false);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -56,6 +59,9 @@ const Register = () => {
     // validationエラーが発生した場合には、新規登録処理をストップする。 
     if(error) return;
 
+    // Loadingを開始
+    setLoading(true);
+
     // 新規登録APIを叩く
     try {
       const res = await authApi.register({
@@ -67,6 +73,10 @@ const Register = () => {
       localStorage.setItem("token", res.token);
 
       console.log("success");
+
+      // Loadingを終了する
+      setLoading(false);
+
     } catch (err) {
       console.log(err);
       // サーバーからのvalidationエラーメッセージをセット
@@ -85,6 +95,9 @@ const Register = () => {
           setConfirmErrText(error.msg);
         }
       });
+
+      // Loadingを終了する
+      setLoading(false);
     }
   }
 
@@ -129,7 +142,7 @@ const Register = () => {
       <LoadingButton
         sx={{ mt: 3, mb: 2}} 
         fullWidth type="submit" 
-        loading={false}
+        loading={loading}
         color="primary"
         variant="outlined"
         >
