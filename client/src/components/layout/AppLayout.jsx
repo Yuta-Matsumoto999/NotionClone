@@ -6,10 +6,13 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import notionLogo from "../../assets/images/notion-logo.png";
 import authUtils from '../../utils/authUtils';
 import Sidebar from '../common/Sidebar';
+import { useDispatch } from "react-redux";
+import { setUser } from '../../redux/features/userSlice';
 
 const AppLayout = () => {
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // ページ遷移が発生する度に更新される処理を記述
     useEffect(() => {
@@ -21,6 +24,9 @@ const AppLayout = () => {
             // 末認証のユーザーはLoginへリダレクト
             if(!user) {
                 navigate("/login");
+            } else {
+                // ユーザーを保存する
+                dispatch(setUser(user));
             }
         };
         checkAuth();
