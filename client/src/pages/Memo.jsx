@@ -2,14 +2,20 @@ import { Box, IconButton, TextField } from '@mui/material'
 import React, { useState, useEffect } from 'react';
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import { useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import memoApi from '../api/memoApi';
+import { useSelector, useDispatch } from "react-redux";
+import { setMemo } from '../redux/features/memoSlice';
 
 
 function Memo() {
+    const navigate = useNavigate();
     const { memoId } = useParams();
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const memos = useSelector((state) => state.memo.value);
+    const dispatch = useDispatch();
+
 
     useEffect(() => {
         const getMemo = async () => {
@@ -55,6 +61,30 @@ function Memo() {
         }, timeout)
     }
 
+    const deleteMemo = async () => {
+        try {
+            const deletedMemo = await memoApi.delete(memoId);
+            console.log(deletedMemo);
+
+            // 全体のメモの中から削除したメモを除外する
+            const newMemos = memos.filter((e) => e._id !== memoId);
+
+            if(newMemos.length === 0) {
+                // 削除後にメモが存在しない場合は、一覧へリダイレクト
+                navigate("/memo");
+            } else {
+                // 削除後にメモが存在する場合は、一番最初のメモへリダイレクトする
+                navigate(`/memo/${newMemos[0]._id}`);
+            }
+
+            // グローバル管理のmemosの状態を更新する
+            dispatch(setMemo(newMemos));
+
+        }  catch (err) {
+            alert(err);
+        }
+    }
+
     return (
         <>
         <Box sx={{
@@ -65,7 +95,10 @@ function Memo() {
             <IconButton>
                 <StarBorderOutlinedIcon />
             </IconButton>
-            <IconButton variant="outlined" color="error">
+            <IconButton
+                onClick={deleteMemo}
+                variant="outlined"
+                color="error">
                 <DeleteOutlinedIcon />
             </IconButton>
         </Box>
