@@ -24,6 +24,37 @@ function Memo() {
         getMemo();
     }, [memoId]);
 
+    let timer;
+    const timeout = 500;
+
+    const updateTitle = async (e) => {
+        clearTimeout(timer);
+        const newTitle = e.target.value;
+        setTitle(newTitle);
+
+        timer = setTimeout(async () => {
+            try {
+                await memoApi.update(memoId, { title: newTitle });
+            } catch (err) {
+                alert(err);
+            }
+        }, timeout)
+    }
+
+    const updateDescription = async (e) => {
+        clearTimeout(timer);
+        const newDescription = e.target.value;
+        setDescription(newDescription);
+
+        timer = setTimeout(async () => {
+            try {
+                await memoApi.update(memoId, { description: newDescription });
+            } catch (err) {
+                alert(err);
+            }
+        }, timeout)
+    }
+
     return (
         <>
         <Box sx={{
@@ -39,19 +70,30 @@ function Memo() {
             </IconButton>
         </Box>
         <Box sx={{padding: "10px 50px"}}>
-            <TextField placeholder="無題" variant="outlined" fullWidth sx={{
-                ".MuiOutlinedInput-input": { padding: 0 },
-                ".MuiOutlinedInput-notchedOutline" : { border: "none" },
-                ".MuiOutlinedInput-root" : { fontSize: "2rem", fontWeight: 700 },
-            }}
-            value={title}
+            <TextField
+                value={title}
+                onChange={updateTitle}
+                placeholder="無題"
+                variant="outlined"
+                fullWidth
+                sx={{
+                    ".MuiOutlinedInput-input": { padding: 0 },
+                    ".MuiOutlinedInput-notchedOutline" : { border: "none" },
+                    ".MuiOutlinedInput-root" : { fontSize: "2rem", fontWeight: 700 },
+                }}
             />
-            <TextField placeholder="追加" variant="outlined" fullWidth sx={{
-                ".MuiOutlinedInput-input": { padding: 0 },
-                ".MuiOutlinedInput-notchedOutline" : { border: "none" },
-                ".MuiOutlinedInput-root" : { fontSize: "1rem" }
-            }}
-            value={description}
+
+            <TextField
+                value={description}
+                onChange={updateDescription}
+                placeholder="追加"
+                variant="outlined"
+                fullWidth
+                sx={{
+                    ".MuiOutlinedInput-input": { padding: 0 },
+                    ".MuiOutlinedInput-notchedOutline" : { border: "none" },
+                    ".MuiOutlinedInput-root" : { fontSize: "1rem" }
+                }}
             />
         </Box>
         </>
