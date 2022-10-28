@@ -2,10 +2,11 @@ import { Drawer, IconButton, List, ListItemButton, Typography } from '@mui/mater
 import { Box, width } from '@mui/system';
 import LogoutOutlinedIcon from "@mui/icons-material/LogoutOutlined";
 import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
-import React from 'react'
+import React, { useEffect } from 'react'
 import assets from '../../assets/index';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
+import memoApi from '../../api/memoApi';
 
 const Sidebar = () => {
 
@@ -15,7 +16,19 @@ const Sidebar = () => {
     const logout = () => {
         localStorage.removeItem("token");
         navigate("/login");
-    }
+    };
+
+    useEffect(() => {
+        const getMemos = async () => {
+            try {   
+                const res = await memoApi.getAll();
+                console.log(res);
+            } catch (err) {
+                alert(err);
+            }
+        };
+        getMemos();
+    }, []);
 
     return (
         <Drawer container={window.document.body} variant="permanent" open={true} sx={{width: 250, height: "100vh"}}>
@@ -41,7 +54,7 @@ const Sidebar = () => {
                     <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     </Box>
                 <ListItemButton>
-                <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                         <Typography>
                             プライベート
                         </Typography>
@@ -49,6 +62,30 @@ const Sidebar = () => {
                             <AddBoxOutlinedIcon fontSize="small"></AddBoxOutlinedIcon>
                         </IconButton>
                     </Box>
+                </ListItemButton>
+                <ListItemButton 
+                    sx={{pl: "20px"}} 
+                    component={Link} to="memo/47474294ry4298"
+                >
+                    <Typography>
+                        🗒仮置きのメモ
+                    </Typography>
+                </ListItemButton>
+                <ListItemButton 
+                    sx={{pl: "20px"}} 
+                    component={Link} to="memo/47474294ry4298"
+                >
+                    <Typography>
+                        🗒仮置きのメモ
+                    </Typography>
+                </ListItemButton>
+                <ListItemButton 
+                    sx={{pl: "20px"}} 
+                    component={Link} to="memo/47474294ry4298"
+                >
+                    <Typography>
+                        🗒仮置きのメモ
+                    </Typography>
                 </ListItemButton>
             </List>
         </Drawer>
