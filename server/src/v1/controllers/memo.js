@@ -5,7 +5,7 @@ exports.create = async (req, res) => {
         // 保存されているメモの個数を取得
         const memoCount = await Memo.find().count();
         // メモ新規作成
-        const memo = Memo.create({ 
+        const memo = await Memo.create({ 
             user: req.user._id,
             position: memoCount > 0 ? memoCount : 0,
         });
