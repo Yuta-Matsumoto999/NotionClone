@@ -5,13 +5,16 @@ import AddBoxOutlinedIcon from "@mui/icons-material/AddBoxOutlined";
 import React, { useEffect } from 'react'
 import assets from '../../assets/index';
 import { Link, useNavigate } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import memoApi from '../../api/memoApi';
+import { setMemo } from '../../redux/features/memoSlice';
 
 const Sidebar = () => {
 
+    const dispatch  = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user.value);
+    const memos = useSelector((state) => state.memo.value);
 
     const logout = () => {
         localStorage.removeItem("token");
@@ -22,7 +25,7 @@ const Sidebar = () => {
         const getMemos = async () => {
             try {   
                 const res = await memoApi.getAll();
-                console.log(res);
+                dispatch(setMemo(res));
             } catch (err) {
                 alert(err);
             }
@@ -63,30 +66,17 @@ const Sidebar = () => {
                         </IconButton>
                     </Box>
                 </ListItemButton>
-                <ListItemButton 
-                    sx={{pl: "20px"}} 
-                    component={Link} to="memo/47474294ry4298"
-                >
-                    <Typography>
-                        🗒仮置きのメモ
-                    </Typography>
-                </ListItemButton>
-                <ListItemButton 
-                    sx={{pl: "20px"}} 
-                    component={Link} to="memo/47474294ry4298"
-                >
-                    <Typography>
-                        🗒仮置きのメモ
-                    </Typography>
-                </ListItemButton>
-                <ListItemButton 
-                    sx={{pl: "20px"}} 
-                    component={Link} to="memo/47474294ry4298"
-                >
-                    <Typography>
-                        🗒仮置きのメモ
-                    </Typography>
-                </ListItemButton>
+                {memos.map((item, index) => (
+                    <ListItemButton 
+                        sx={{pl: "20px"}} 
+                        component={Link} to={`/memo/${item._id}`}
+                        key={item._id}
+                    >
+                        <Typography>
+                            {item.icon} {item.title}
+                        </Typography>
+                    </ListItemButton>
+                ))}
             </List>
         </Drawer>
     )
