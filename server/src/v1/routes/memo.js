@@ -15,5 +15,8 @@ router.get("/:memoId", tokenHandler.verifyToken, memoController.getOne);
 // メモを更新
 router.put("/:memoId", tokenHandler.verifyToken, memoController.update);
 
+// メモを削除
+router.delete("/:memoId", tokenHandler.verifyToken, memoController.delete);
+
 module.exports = router;
 
