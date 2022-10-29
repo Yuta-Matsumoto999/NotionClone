@@ -39,6 +39,17 @@ const Sidebar = () => {
         setActiveIndex(activeIndex);
     }, [navigate]);
 
+    const addMemo = async () => {
+        try {
+            const newMemo = await memoApi.create();
+            const newMemos = [newMemo, ...memos];
+            dispatch(setMemo(newMemos));
+            navigate(`/memo/${newMemo._id}`);
+        } catch (err) {
+            alert(err);
+        }
+    }
+
     return (
         <Drawer container={window.document.body} variant="permanent" open={true} sx={{width: 250, height: "100vh"}}>
             <List sx={{ width: 250, height: "100vh", backgroundColor: assets.colors.secondary }}>
@@ -67,7 +78,7 @@ const Sidebar = () => {
                         <Typography>
                             プライベート
                         </Typography>
-                        <IconButton>
+                        <IconButton onClick={addMemo}>
                             <AddBoxOutlinedIcon fontSize="small"></AddBoxOutlinedIcon>
                         </IconButton>
                     </Box>
