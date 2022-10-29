@@ -39,6 +39,7 @@ function Memo() {
     const updateTitle = async (e) => {
         clearTimeout(timer);
         const newTitle = e.target.value;
+
         setTitle(newTitle);
 
         timer = setTimeout(async () => {
@@ -47,7 +48,13 @@ function Memo() {
             } catch (err) {
                 alert(err);
             }
-        }, timeout)
+        }, timeout);
+
+        let temp = [...memos];
+        const index = temp.findIndex((e) => e._id === memoId);
+        temp[index] = {...temp[index], title: newTitle };
+
+        dispatch(setMemo(temp));
     }
 
     const updateDescription = async (e) => {
@@ -61,7 +68,13 @@ function Memo() {
             } catch (err) {
                 alert(err);
             }
-        }, timeout)
+        }, timeout);
+
+        let temp = [...memos];
+        const index = temp.findIndex((e) => e._id === memoId);
+        temp[index] = {...temp[index], description: newDescription };
+
+        dispatch(setMemo(temp));
     }
 
     const deleteMemo = async () => {
