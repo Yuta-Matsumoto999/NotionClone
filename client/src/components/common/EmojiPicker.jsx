@@ -28,7 +28,11 @@ const EmojiPicker = (props) => {
         // unifiedコードの配列を展開し、絵文字に変換する
         const emoji = String.fromCodePoint(...codesArray);
 
+        // Pickerを閉じる
         setIsShowPicker(false);
+
+        // propsでMemo.jsxへ絵文字を渡す
+        props.onChange(emoji);
     }
 
     return (

@@ -88,6 +88,27 @@ function Memo() {
         }
     }
 
+    const onIconChange = async (newIcon) => {
+        // グローバルで管理しているmemosをコピー
+        let temp = [...memos];
+
+        // 更新するメモのindexを取得
+        const index = temp.findIndex((e) => e._id === memoId);
+
+        // indexでmemosから更新するメモを特定し、そのメモのiconを更新する
+        temp[index] = {...temp[index], icon: newIcon };
+
+        setIcon(newIcon);
+        dispatch(setMemo(temp));
+
+        // DBのメモ情報を更新
+        try {
+            await memoApi.update(memoId, { icon: newIcon });
+        } catch (err) {
+            alert(err);
+        }
+    }
+
     return (
         <>
         <Box sx={{
@@ -107,7 +128,7 @@ function Memo() {
         </Box>
         <Box sx={{padding: "10px 50px"}}>
             <Box>
-                <EmojiPicker icon={icon}/>
+                <EmojiPicker icon={icon} onChange={onIconChange}/>
                 <TextField
                     value={title}
                     onChange={updateTitle}
