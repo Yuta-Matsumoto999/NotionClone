@@ -3,7 +3,7 @@ const Memo = require("../models/memo");
 exports.create = async (req, res) => {
     try {
         // 保存されているメモの個数を取得
-        const memoCount = await Memo.find().count();
+        const memoCount = await Memo.find({user: req.user._id}).count();
         // メモ新規作成
         const memo = await Memo.create({ 
             user: req.user._id,
