@@ -66,16 +66,27 @@ const Sidebar = () => {
                 <Box sx={{ paddingTop: "10px" }}></Box>
                 <ListItemButton>
                     <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <Typography>
+                        <Typography fontWeight="700">
                             お気に入り
                         </Typography>
                     </Box>
                 </ListItemButton>
-                    <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    </Box>
+                {memos.map((item, index) => (
+                    item.favorite === true &&
+                    <ListItemButton 
+                        sx={{pl: "20px"}} 
+                        component={Link} to={`/memo/${item._id}`}
+                        key={item._id}
+                        selected={index === activeIndex}
+                    >
+                        <Typography>
+                            {item.icon} {item.title}
+                        </Typography>
+                    </ListItemButton>
+                ))}
                 <ListItemButton>
                     <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <Typography>
+                        <Typography fontWeight="700">
                             プライベート
                         </Typography>
                         <IconButton onClick={addMemo}>
@@ -84,6 +95,7 @@ const Sidebar = () => {
                     </Box>
                 </ListItemButton>
                 {memos.map((item, index) => (
+                    item.favorite === false &&
                     <ListItemButton 
                         sx={{pl: "20px"}} 
                         component={Link} to={`/memo/${item._id}`}

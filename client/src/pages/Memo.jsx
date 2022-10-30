@@ -1,6 +1,7 @@
 import { Box, IconButton, TextField } from '@mui/material'
 import React, { useState, useEffect } from 'react';
 import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
+import StarOutlinedIcon from '@mui/icons-material/StarOutlined';
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import memoApi from '../api/memoApi';
@@ -15,6 +16,7 @@ function Memo() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [icon, setIcon] = useState("");
+    const [isFavoriteShow, setIsFavoriteShow] = useState();
     const memos = useSelector((state) => state.memo.value);
     const dispatch = useDispatch();
 
@@ -26,6 +28,7 @@ function Memo() {
                 setTitle(memo.title);
                 setDescription(memo.description);
                 setIcon(memo.icon);
+                setIsFavoriteShow(memo.favorite);
             } catch (err) {
                 alert(err);
             }
@@ -44,7 +47,8 @@ function Memo() {
 
         timer = setTimeout(async () => {
             try {
-                await memoApi.update(memoId, { title: newTitle });
+                const res = await memoApi.update(memoId, { title: newTitle });
+                console.log(res);
             } catch (err) {
                 alert(err);
             }
@@ -122,6 +126,21 @@ function Memo() {
         }
     }
 
+    const handleMemoFavorite = async () => {
+        try {
+            await memoApi.update(memoId, { favorite: !isFavoriteShow });
+        } catch (err) {
+            alert(err);
+        }
+
+        let temp = [...memos];
+        const index = temp.findIndex((e) => e._id === memoId);
+        temp[index] = { ...temp[index], favorite: !isFavoriteShow };
+        dispatch(setMemo(temp));
+
+        setIsFavoriteShow(!isFavoriteShow);
+    }
+
     return (
         <>
         <Box sx={{
@@ -129,8 +148,11 @@ function Memo() {
             alignItems: "center",
             width: "100%"
         }}>
-            <IconButton>
+            <IconButton onClick={handleMemoFavorite} sx={{display: isFavoriteShow ? "none" : "block"}}>
                 <StarBorderOutlinedIcon />
+            </IconButton>
+            <IconButton onClick={handleMemoFavorite} sx={{display: isFavoriteShow ? "block" : "none"}}>
+                <StarOutlinedIcon />
             </IconButton>
             <IconButton
                 onClick={deleteMemo}
