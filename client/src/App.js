@@ -14,7 +14,14 @@ import Project from "./pages/Project";
 function App() {
 
   const Theme = createTheme({
-    palette: { primary: blue },
+    palette: { 
+      primary: blue,
+      natural: {
+        main: '#64748B',
+        contrastText: '#fff',
+      }
+    },
+
   });
 
   return ( 
