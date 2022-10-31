@@ -1,3 +1,4 @@
+const Memo = require("../models/memo");
 const Project = require("../models/project");
 
 // プロジェクトの新規作成
@@ -48,7 +49,7 @@ exports.update = async (req, res) => {
 
     try {
         // 既存のプロジェクトが存在するか確認する
-        const existsProject = await Project.findOne({ user: req.user._id, id: projectId });
+        const existsProject = await Project.findOne({ user: req.user._id, _id: projectId });
 
         if(!existsProject) return res.status(404).json("プロジェクトが存在しません。");
 
@@ -62,6 +63,46 @@ exports.update = async (req, res) => {
         });
 
         res.status(200).json(updatedProject);
+
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
+
+// プロジェクトの削除
+exports.destroy = async (req, res) => {
+    const  { projectId } = req.params;
+    const { deleteProjectName } = req.body;
+
+    try {
+        console.log(deleteProjectName);
+        const existsProject = await Project.findOne({ user: req.user._id, _id: projectId, name: deleteProjectName });
+
+        console.log(existsProject);
+
+        if(!existsProject) return res.status(404).json({
+            errors: [
+                {
+                    param: "deleteProjectName",
+                    msg: "プロジェクト名が一致しません。",
+                }
+            ]
+        });
+
+        // プロジェクトに作成されたメモを全件取得
+        // ここに記述
+
+        // console.log(memos);
+
+        // 取得したメモを1件ずつ削除
+        // memos.forEach(async (el) => {
+        //     await Memo.deleteOne({ user: req.user._id, id: memo._id });
+        // });
+
+        // プロジェクトを削除
+        await Project.deleteOne({ user: req.user._id, _id: projectId, name: deleteProjectName });
+
+        res.status(200).json("プロジェクトの削除が完了しました。");
 
     } catch (err) {
         res.status(500).json(err);

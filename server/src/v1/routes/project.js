@@ -14,4 +14,7 @@ router.get("/:projectId", tokenHandler.verifyToken, projectController.getOne);
 // プロジェクトの更新
 router.put("/:projectId", tokenHandler.verifyToken, projectController.update);
 
+// プロジェクトの削除
+router.post("/destroy/:projectId", tokenHandler.verifyToken, projectController.destroy);
+
 module.exports = router;
