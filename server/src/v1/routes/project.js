@@ -8,4 +8,7 @@ router.post("/", tokenHandler.verifyToken, projectController.create);
 // ログインしているユーザーのプロジェクトを全て取得
 router.get("/", tokenHandler.verifyToken, projectController.getAll);
 
+// プロジェクトを個別に取得
+router.get("/:projectId", tokenHandler.verifyToken, projectController.getOne);
+
 module.exports = router;
