@@ -6,8 +6,8 @@ import React, { useEffect, useState } from 'react'
 import assets from '../../assets/index';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import memoApi from '../../api/memoApi';
-import { setMemo } from '../../redux/features/memoSlice';
+import projectApi from "../../api/projectApi";
+import { setProject } from '../../redux/features/projectSlice';
 
 const Sidebar = () => {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -16,6 +16,7 @@ const Sidebar = () => {
     const { memoId } = useParams();
     const user = useSelector((state) => state.user.value);
     const memos = useSelector((state) => state.memo.value);
+    const projects = useSelector((state) => state.project.value);
 
     const logout = () => {
         localStorage.removeItem("token");
@@ -23,15 +24,15 @@ const Sidebar = () => {
     };
 
     useEffect(() => {
-        const getMemos = async () => {
+        const getProjects = async () => {
             try {   
-                const res = await memoApi.getAll();
-                dispatch(setMemo(res));
+                const res = await projectApi.getAll();
+                dispatch(setProject(res));
             } catch (err) {
                 alert(err);
             }
         };
-        getMemos();
+        getProjects();
     }, []);
 
     useEffect(() => {
@@ -39,12 +40,13 @@ const Sidebar = () => {
         setActiveIndex(activeIndex);
     }, [navigate]);
 
-    const addMemo = async () => {
+    const addProject = async () => {
         try {
-            const newMemo = await memoApi.create();
-            const newMemos = [newMemo, ...memos];
-            dispatch(setMemo(newMemos));
-            navigate(`/memo/${newMemo._id}`);
+            const newProject = await projectApi.create();
+            console.log(newProject);
+            const newProjects = [newProject, ...projects];
+            dispatch(setProject(newProjects));
+            navigate("/");
         } catch (err) {
             alert(err);
         }
@@ -67,43 +69,20 @@ const Sidebar = () => {
                 <ListItemButton>
                     <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                         <Typography fontWeight="700">
-                            お気に入り
+                            プロジェクト
                         </Typography>
+                        <AddBoxOutlinedIcon onClick={addProject}/>
                     </Box>
                 </ListItemButton>
-                {memos.map((item, index) => (
-                    item.favorite === true &&
+                {projects.map((item, index) => (
                     <ListItemButton 
                         sx={{pl: "20px"}} 
-                        component={Link} to={`/memo/${item._id}`}
+                        component={Link} to={`/project/${item._id}`}
                         key={item._id}
                         selected={index === activeIndex}
                     >
                         <Typography>
-                            {item.icon} {item.title}
-                        </Typography>
-                    </ListItemButton>
-                ))}
-                <ListItemButton>
-                    <Box sx={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <Typography fontWeight="700">
-                            プライベート
-                        </Typography>
-                        <IconButton onClick={addMemo}>
-                            <AddBoxOutlinedIcon fontSize="small"></AddBoxOutlinedIcon>
-                        </IconButton>
-                    </Box>
-                </ListItemButton>
-                {memos.map((item, index) => (
-                    item.favorite === false &&
-                    <ListItemButton 
-                        sx={{pl: "20px"}} 
-                        component={Link} to={`/memo/${item._id}`}
-                        key={item._id}
-                        selected={index === activeIndex}
-                    >
-                        <Typography>
-                            {item.icon} {item.title}
+                            {item.icon} {item.name}
                         </Typography>
                     </ListItemButton>
                 ))}
