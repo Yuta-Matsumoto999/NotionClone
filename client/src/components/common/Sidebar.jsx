@@ -13,9 +13,8 @@ const Sidebar = () => {
     const [activeIndex, setActiveIndex] = useState(0);
     const dispatch  = useDispatch();
     const navigate = useNavigate();
-    const { memoId } = useParams();
+    const { projectId } = useParams();
     const user = useSelector((state) => state.user.value);
-    const memos = useSelector((state) => state.memo.value);
     const projects = useSelector((state) => state.project.value);
 
     const logout = () => {
@@ -36,7 +35,7 @@ const Sidebar = () => {
     }, []);
 
     useEffect(() => {
-        const activeIndex = memos.findIndex((e) => e._id === memoId);
+        const activeIndex = projects.findIndex((e) => e._id === projectId);
         setActiveIndex(activeIndex);
     }, [navigate]);
 
@@ -46,7 +45,7 @@ const Sidebar = () => {
             console.log(newProject);
             const newProjects = [newProject, ...projects];
             dispatch(setProject(newProjects));
-            navigate("/");
+            navigate(`project/${newProject._id}`);
         } catch (err) {
             alert(err);
         }
