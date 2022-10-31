@@ -5,6 +5,11 @@ const memoSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
+    project: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
+        required: true
+    },
     icon: {
         type: String,
         default: "📝",
