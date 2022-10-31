@@ -6,11 +6,16 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import SearchIcon from '@mui/icons-material/Search';
 import { useSelector, useDispatch } from "react-redux";
 import { setProject } from '../redux/features/projectSlice';
+import EmojiPicker from "../components/common/EmojiPicker";
+import ProjectDeleteAlert from '../components/alert/ProjectDeleteAlert';
+
 
 const Project = () => {
     const { projectId } = useParams();
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
+    const [icon, setIcon] = useState("");
+    const [isShowProjectDeleteAlert, setIsShowProjectDeleteAlert] = useState(false);
     const projects = useSelector((state) => state.project.value);
     const dispatch = useDispatch();
 
@@ -20,6 +25,7 @@ const Project = () => {
                 const project = await projectApi.getOne(projectId);
                 setProjectName(project.name);
                 setProjectDescription(project.description);
+                setIcon(project.icon);
             } catch (err) {
                 alert(err);
             }
@@ -27,41 +33,80 @@ const Project = () => {
         getProject();
     }, [projectId]);
 
-    const updateName = async (e) => {
+    let timer;
+    const time = 500;
+
+    const updateName = (e) => {
+        clearTimeout(timer);
         const newName = e.target.value;
+
         setProjectName(newName);
 
-        try {
-            const res = await projectApi.update(projectId, { name: newName });
-        } catch (err) {
-            alert(err);
-        }
-
-        const temp = [...projects];
+        let temp = [...projects];
         const index = projects.findIndex((e) => e._id === projectId);
         temp[index] = { ...temp[index], name: newName };
 
         dispatch(setProject(temp));
+
+        timer = setTimeout(async () => {
+            try {
+                const res = await projectApi.update(projectId, { name: newName });
+            } catch (err) {
+                alert(err);
+            }
+        },
+        time);
     }
 
-    const updateDescription = async (e) => {
+    const updateDescription = (e) => {
         const newDescription = e.target.value;
         setProjectDescription(newDescription);
 
+        let temp = [...projects];
+        const index = projects.findIndex((e) => e._id === projectId);
+        temp[index] = { ...temp[index], description: newDescription };
+
+        dispatch(setProject(temp));
+
+        timer = setTimeout(async () => {
+            try {
+                const res = await projectApi.update(projectId, { description: newDescription });
+            } catch (err) {
+                alert(err);
+            }
+        },
+        time);
+    }
+
+    const onIconChange = async (newIcon) => {
+        let temp = [...projects];
+        const index = projects.findIndex((e) => e._id === projectId);
+        temp[index] = {...temp[index], icon: newIcon};
+
+        setIcon(newIcon);
+        dispatch(setProject(temp));
+
         try {
-            const res = await projectApi.update(projectId, { description: newDescription });
+            const res = await projectApi.update(projectId, {
+                icon : newIcon
+            });
         } catch (err) {
             alert(err);
         }
+    }
 
-        const temp = [...projects];
-        const index = projects.findIndex((e) => e._id === projectId);
-        temp[index] = { ...temp[index], description: newDescription };
+    const handleDeleteAlert = (state) => {
+        if(state === false) {
+            setIsShowProjectDeleteAlert(false);
+        } else {
+            setIsShowProjectDeleteAlert(!isShowProjectDeleteAlert);
+        }
     }
 
     return (
         <Box sx={{padding: "10px 50px"}}>
             <Box sx={{display: "flex", justifyContent: "between"}}>
+                <EmojiPicker icon={icon} onChange={onIconChange}/>
                 <TextField
                     value={projectName}
                     onChange={updateName}
@@ -76,7 +121,7 @@ const Project = () => {
                 />
 
                 <IconButton
-                    // onClick={deleteMemo}
+                    onClick={handleDeleteAlert}
                     variant="outlined"
                     color="error">
                     <DeleteOutlinedIcon />
@@ -113,6 +158,7 @@ const Project = () => {
                     </Box>
                 </Grid>
             </Grid>
+            <ProjectDeleteAlert isShow={isShowProjectDeleteAlert} projectName={projectName} onClick={handleDeleteAlert} projectId={projectId}/>
         </Box>
     )
 }
