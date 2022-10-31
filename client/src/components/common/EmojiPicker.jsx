@@ -31,7 +31,7 @@ const EmojiPicker = (props) => {
         // Pickerを閉じる
         setIsShowPicker(false);
 
-        // propsでMemo.jsxへ絵文字を渡す
+        // propsで絵文字を渡す
         props.onChange(emoji);
     }
 
