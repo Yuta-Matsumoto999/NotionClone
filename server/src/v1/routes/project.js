@@ -11,4 +11,7 @@ router.get("/", tokenHandler.verifyToken, projectController.getAll);
 // プロジェクトを個別に取得
 router.get("/:projectId", tokenHandler.verifyToken, projectController.getOne);
 
+// プロジェクトの更新
+router.put("/:projectId", tokenHandler.verifyToken, projectController.update);
+
 module.exports = router;
