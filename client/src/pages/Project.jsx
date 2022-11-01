@@ -10,12 +10,15 @@ import EmojiPicker from "../components/common/EmojiPicker";
 import ProjectDeleteAlert from '../components/alert/ProjectDeleteAlert';
 import TagCreate from '../components/form/TagCreate';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { setTag } from '../redux/features/tagSlice';
+import TagListGroup from '../components/listGroup/TagListGroup';
 
 const Project = () => {
     const { projectId } = useParams();
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [icon, setIcon] = useState("");
+    const [tags, setTags] = useState([]);
     const [isShowProjectDeleteAlert, setIsShowProjectDeleteAlert] = useState(false);
     const [isShowTagCreate, setIsShowTagCreate] = useState(false);
     const projects = useSelector((state) => state.project.value);
@@ -25,9 +28,13 @@ const Project = () => {
         const getProject = async () => {
             try {
                 const project = await projectApi.getOne(projectId);
+                console.log(project);
                 setProjectName(project.name);
                 setProjectDescription(project.description);
                 setIcon(project.icon);
+                setTags(project.tags);
+
+                dispatch(setTag(tags));
             } catch (err) {
                 alert(err);
             }
@@ -172,6 +179,7 @@ const Project = () => {
                 <Button variant='outLined' size='small'onClick={handleTagCreateForm}><AddOutlinedIcon /></Button>
                 <TagCreate isShow={isShowTagCreate} onClick={handleTagCreateForm}/>
             </Box>
+            <TagListGroup tags={tags} />
             <ProjectDeleteAlert isShow={isShowProjectDeleteAlert} projectName={projectName} onClick={handleDeleteAlert} projectId={projectId}/>
         </Box>
     )

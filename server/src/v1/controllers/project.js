@@ -1,5 +1,6 @@
 const Memo = require("../models/memo");
 const Project = require("../models/project");
+const Tag = require("../models/tag");
 
 // プロジェクトの新規作成
 exports.create = async (req, res) => {
@@ -32,7 +33,7 @@ exports.getOne = async (req, res) => {
     const { projectId } = req.params;
 
     try {
-        const project = await Project.findOne({user: req.user._id, _id: projectId});
+        const project = await Project.findOne({user: req.user._id, _id: projectId}).populate("tags");
 
         if(!project) return res.status(404).json("プロジェクトが存在しません。");
 
