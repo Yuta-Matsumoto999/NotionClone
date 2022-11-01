@@ -20,7 +20,11 @@ const tagSchema = new mongoose.Schema({
     visible: {
         type: Boolean,
         default: true
-    }
+    },
+    memos: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "memo"
+    }]
 });
 
 module.exports = mongoose.model("Tag", tagSchema);

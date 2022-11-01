@@ -27,7 +27,11 @@ const projectSchema = new mongoose.Schema({
     },
     deleted_at: {
         type: Date
-    }
+    },
+    tags: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tag"
+    }]
 });
 
 module.exports = mongoose.model("Project", projectSchema);

@@ -5,9 +5,9 @@ const memoSchema = new mongoose.Schema({
         ref: "User",
         required: true
     },
-    project: {
+    tag: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Project",
+        ref: "Tag",
         required: true
     },
     icon: {
