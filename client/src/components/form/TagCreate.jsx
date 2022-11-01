@@ -16,7 +16,8 @@ const TagCreate = (props) => {
 
     const createTag = async (e) => {
         e.preventDefault();
-        const newTagName = e.target.value;
+        const formData = new FormData(e.target);
+        const newTagName = formData.get("tagName");
 
         try {
             const res = await tagApi.create(projectId.projectId, { name: newTagName });
@@ -45,6 +46,7 @@ const TagCreate = (props) => {
                 backgroundColor: "#eee",
                 zIndex: "100"
                 }}
+                onSubmit={createTag}
             >
                 <TextField
                     id="tagName"
@@ -63,7 +65,7 @@ const TagCreate = (props) => {
                     type='submit'
                     variant='contained'
                     size='small'
-                    onClick={createTag}>
+                >
                         完了
                 </Button>
             </Box>
