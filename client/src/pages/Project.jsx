@@ -8,7 +8,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { setProject } from '../redux/features/projectSlice';
 import EmojiPicker from "../components/common/EmojiPicker";
 import ProjectDeleteAlert from '../components/alert/ProjectDeleteAlert';
-
+import TagCreate from '../components/form/TagCreate';
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 const Project = () => {
     const { projectId } = useParams();
@@ -16,6 +17,7 @@ const Project = () => {
     const [projectDescription, setProjectDescription] = useState("");
     const [icon, setIcon] = useState("");
     const [isShowProjectDeleteAlert, setIsShowProjectDeleteAlert] = useState(false);
+    const [isShowTagCreate, setIsShowTagCreate] = useState(false);
     const projects = useSelector((state) => state.project.value);
     const dispatch = useDispatch();
 
@@ -103,6 +105,14 @@ const Project = () => {
         }
     }
 
+    const handleTagCreateForm = (state) => {
+        if(state === false) {
+            setIsShowTagCreate(false);
+        } else {
+            setIsShowTagCreate(!isShowTagCreate);
+        }
+    }
+
     return (
         <Box sx={{padding: "10px 50px"}}>
             <Box sx={{display: "flex", justifyContent: "between"}}>
@@ -158,6 +168,10 @@ const Project = () => {
                     </Box>
                 </Grid>
             </Grid>
+            <Box sx={{  textAlign: "right", position: "relative"}}>
+                <Button variant='outLined' size='small'onClick={handleTagCreateForm}><AddOutlinedIcon /></Button>
+                <TagCreate isShow={isShowTagCreate} onClick={handleTagCreateForm}/>
+            </Box>
             <ProjectDeleteAlert isShow={isShowProjectDeleteAlert} projectName={projectName} onClick={handleDeleteAlert} projectId={projectId}/>
         </Box>
     )
