@@ -43,7 +43,7 @@ const Sidebar = () => {
         try {
             const newProject = await projectApi.create();
             console.log(newProject);
-            const newProjects = [newProject, ...projects];
+            const newProjects = [...projects, newProject];
             dispatch(setProject(newProjects));
             navigate(`project/${newProject._id}`);
         } catch (err) {
