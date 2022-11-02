@@ -34,7 +34,7 @@ const Project = () => {
                 setIcon(project.icon);
                 setTags(project.tags);
 
-                dispatch(setTag(tags));
+                dispatch(setTag(project.tags));
             } catch (err) {
                 alert(err);
             }
@@ -179,7 +179,7 @@ const Project = () => {
                 <Button variant='outLined' size='small'onClick={handleTagCreateForm}><AddOutlinedIcon /></Button>
                 <TagCreate isShow={isShowTagCreate} onClick={handleTagCreateForm}/>
             </Box>
-            <TagListGroup tags={tags} />
+            <TagListGroup/>
             <ProjectDeleteAlert isShow={isShowProjectDeleteAlert} projectName={projectName} onClick={handleDeleteAlert} projectId={projectId}/>
         </Box>
     )
