@@ -50,3 +50,15 @@ exports.update = async (req, res) => {
         res.status(500).json(err);
     }
 }
+
+// タグの削除
+exports.delete = async (req, res) => {
+    const { tagId } = req.params;
+
+    try {
+        await Tag.findByIdAndDelete(tagId);
+        res.status(200).json("タグの削除が完了しました。");
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
