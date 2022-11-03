@@ -20,6 +20,7 @@ const TagListGroup = () => {
                     key={index} 
                     id={value._id}
                     tagName={value.name}
+                    tagId={value._id}
                     color={value.color}
                     memos={value.memos}
                     AddItems={addItems}

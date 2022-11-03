@@ -35,3 +35,18 @@ exports.create = async (req, res) => {
         res.status(500).json(err);
     }
 }
+
+// タグの更新
+exports.update = async (req, res) => {
+    const { tagId } = req.params;
+
+    try {
+        const updatedTag = await Tag.findByIdAndUpdate(tagId, {
+            color: req.body.color
+        });
+
+        res.status(200).json(updatedTag);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}
