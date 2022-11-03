@@ -13,7 +13,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 
-const ProjectDeleteAlert = (props) => {
+const ProjectDeleteDialog = (props) => {
     const navigate = useNavigate();
     const [deleteProjectNameErrText, setDeleteProjectNameErrText] = useState("");
     const projects = useSelector((state) => state.project.value);
@@ -96,4 +96,4 @@ const ProjectDeleteAlert = (props) => {
     )
 }
 
-export default ProjectDeleteAlert
+export default ProjectDeleteDialog
