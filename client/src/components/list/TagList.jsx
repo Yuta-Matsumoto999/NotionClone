@@ -35,7 +35,7 @@ const TagList = (props) => {
                                     onClick={handleShowTagUpdate}
                                 ><MoreHorizOutlinedIcon fontSize='small'/></Button>
                             </Typography>
-                            <TagUpdate anchorEl={anchorEl} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor}/>
+                            <TagUpdate anchorEl={anchorEl} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor} tagName={props.tagName}/>
                             <Button sx={{padding: "2px"}}><AddOutlinedIcon fontSize='small' /></Button>
                         </Box>
                     </Box>

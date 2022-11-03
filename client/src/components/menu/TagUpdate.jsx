@@ -16,11 +16,13 @@ import tagApi from '../../api/tagApi';
 import { useSelector, useDispatch } from "react-redux";
 import { setTag } from '../../redux/features/tagSlice';
 import { useNavigate } from 'react-router-dom';
+import TagDeleteDialog from '../dialog/TagDeleteDialog';
 
 const TagUpdate = (props) => {
-    const navigate = useNavigate()
-;    const [colors, setColors] = useState([]);
+    const navigate = useNavigate();    
+    const [colors, setColors] = useState([]);
     const [currentTag, setCurrentTag] = useState();
+    const [isShowTagDeleteDialog, setIsShowTagDeleteDialog] = useState(false);
     const tags = useSelector((state) => state.tag.value);
     const dispatch = useDispatch(); 
 
@@ -56,6 +58,14 @@ const TagUpdate = (props) => {
         }
     }
 
+    const handleShowTagDelete = () => {
+        setIsShowTagDeleteDialog(!isShowTagDeleteDialog);
+    }
+
+    const handleCloseTagDelete = () => {
+        setIsShowTagDeleteDialog(false);
+    }
+
     return (
             <Menu
                 id="tagUpdate-menu"
@@ -80,11 +90,12 @@ const TagUpdate = (props) => {
                     </ListItemIcon>
                     <ListItemText sx={{".css-10hburv-MuiTypography-root": {fontSize: "0.88rem"}}}>非表示</ListItemText>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={handleShowTagDelete}>
                     <ListItemIcon>
-                    <DeleteIcon fontSize="small" />
+                        <DeleteIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText sx={{".css-10hburv-MuiTypography-root": {fontSize: "0.88rem"}}}>削除</ListItemText>
+                    <TagDeleteDialog isShow={isShowTagDeleteDialog} onClose={handleCloseTagDelete} tagName={props.tagName} tagId={props.tagId}/>
                 </MenuItem>
                 <Divider />
                 {colors.map((item, index) => (
