@@ -14,14 +14,15 @@ const TagListGroup = () => {
     return (
         <DragDropContext>
             <Box sx={{display: "flex"}}>
-                {tags.map((value, index) => 
+                {tags.map((item, index) => 
+                    item.visible === true &&
                     <TagList 
                     key={index} 
-                    id={value._id}
-                    tagName={value.name}
-                    tagId={value._id}
-                    color={value.color}
-                    memos={value.memos}
+                    id={item._id}
+                    tagName={item.name}
+                    tagId={item._id}
+                    color={item.color}
+                    memos={item.memos}
                     AddItems={addItems}
                     />
                 )}

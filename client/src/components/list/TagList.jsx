@@ -5,16 +5,27 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import TagUpdate from '../menu/TagUpdate';
 import { useState } from 'react';
+import TagNameEdit from '../menu/TagNameEdit';
 
 const TagList = (props) => {
-    const [anchorEl, setAnchorEl] = useState(null); 
+    const [tagUpdateAnchor, setTagUpdateAnchor] = useState(null); 
+
+    const [tagNameAnchor, setTagNameAnchor] = useState(null);
 
     const handleShowTagUpdate = (e) => {
-        setAnchorEl(e.currentTarget);
+        setTagUpdateAnchor(e.currentTarget);
     }
 
     const handleCloseTagUpdate = () => {
-        setAnchorEl(null);
+        setTagUpdateAnchor(null);
+    }
+
+    const handleShowTagNameEdit = (e) => {
+        setTagNameAnchor(e.currentTarget);
+    }
+
+    const handleCloseTagNameEdit = () => {
+        setTagNameAnchor(null);
     }
 
     return (
@@ -26,16 +37,30 @@ const TagList = (props) => {
                     ref={provided.innerRef}
                 >
                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                        <Typography sx={{padding: "1px 6px", backgroundColor: props.color, borderRadius: "3px"}} fontWeight="700" fontSize="14px">{props.tagName}</Typography>
+                        <Button 
+                            sx={{
+                                    padding: "1px 6px", 
+                                    backgroundColor: props.color, 
+                                    borderRadius: "3px"
+                                }} 
+                                fontWeight="700" 
+                                fontSize="14px"
+                                aria-owns={tagNameAnchor ? "tagNameEdit-menu" : undefined}
+                                aria-haspopup="true"
+                                onClick={handleShowTagNameEdit}
+                        >
+                            {props.tagName}
+                        </Button>
+                        <TagNameEdit anchorEl={tagNameAnchor} onClose={handleCloseTagNameEdit} tagName={props.tagName} tagId={props.tagId}/>
                         <Box sx={{display: "flex", position: "relative"}}>
                             <Typography>
                                 <Button sx={{padding: "2px"}}
-                                    aria-owns={anchorEl ? "tagUpdate-menu" : undefined}
+                                    aria-owns={tagUpdateAnchor ? "tagUpdate-menu" : undefined}
                                     aria-haspopup="true"
                                     onClick={handleShowTagUpdate}
                                 ><MoreHorizOutlinedIcon fontSize='small'/></Button>
                             </Typography>
-                            <TagUpdate anchorEl={anchorEl} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor} tagName={props.tagName}/>
+                            <TagUpdate anchorEl={tagUpdateAnchor} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor} tagName={props.tagName}/>
                             <Button sx={{padding: "2px"}}><AddOutlinedIcon fontSize='small' /></Button>
                         </Box>
                     </Box>
