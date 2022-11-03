@@ -7,7 +7,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useSelector, useDispatch } from "react-redux";
 import { setProject } from '../redux/features/projectSlice';
 import EmojiPicker from "../components/common/EmojiPicker";
-import ProjectDeleteAlert from '../components/alert/ProjectDeleteAlert';
+import ProjectDeleteDialog from '../components/dialog/ProjectDeleteDialog';
 import TagCreate from '../components/form/TagCreate';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { setTag } from '../redux/features/tagSlice';
@@ -19,7 +19,7 @@ const Project = () => {
     const [projectDescription, setProjectDescription] = useState("");
     const [icon, setIcon] = useState("");
     const [tags, setTags] = useState([]);
-    const [isShowProjectDeleteAlert, setIsShowProjectDeleteAlert] = useState(false);
+    const [isShowProjectDeleteDialog, setIsShowProjectDeleteDialog] = useState(false);
     const [isShowTagCreate, setIsShowTagCreate] = useState(false);
     const projects = useSelector((state) => state.project.value);
     const dispatch = useDispatch();
@@ -104,11 +104,11 @@ const Project = () => {
         }
     }
 
-    const handleDeleteAlert = (state) => {
+    const handleDeleteDialog = (state) => {
         if(state === false) {
-            setIsShowProjectDeleteAlert(false);
+            setIsShowProjectDeleteDialog(false);
         } else {
-            setIsShowProjectDeleteAlert(!isShowProjectDeleteAlert);
+            setIsShowProjectDeleteDialog(!isShowProjectDeleteDialog);
         }
     }
 
@@ -138,7 +138,7 @@ const Project = () => {
                 />
 
                 <IconButton
-                    onClick={handleDeleteAlert}
+                    onClick={handleDeleteDialog}
                     variant="outlined"
                     color="error">
                     <DeleteOutlinedIcon />
@@ -180,7 +180,7 @@ const Project = () => {
                 <TagCreate isShow={isShowTagCreate} onClick={handleTagCreateForm}/>
             </Box>
             <TagListGroup/>
-            <ProjectDeleteAlert isShow={isShowProjectDeleteAlert} projectName={projectName} onClick={handleDeleteAlert} projectId={projectId}/>
+            <ProjectDeleteDialog isShow={isShowProjectDeleteDialog} projectName={projectName} handleClose={handleDeleteDialog} projectId={projectId}/>
         </Box>
     )
 }
