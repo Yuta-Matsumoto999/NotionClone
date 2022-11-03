@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab'
-import { Button, TextField } from '@mui/material'
+import { Button, Menu, MenuItem, TextField } from '@mui/material'
 import { Box, Container, padding } from '@mui/system'
 import React, { useState } from 'react';
 import CallMissedOutgoingOutlinedIcon from '@mui/icons-material/CallMissedOutgoingOutlined';
@@ -25,7 +25,7 @@ const TagCreate = (props) => {
             const newTags = [...tags, res];
             dispatch(setTag(newTags));
 
-            props.onClick(false);
+            props.onClose();
 
             navigate(`/project/${projectId.projectId}`);
 
@@ -35,20 +35,26 @@ const TagCreate = (props) => {
     }
 
     return (
-            <Box component="form" sx={{
-                display: props.isShow ? "flex" : "none",
-                justifyContent:"space-between", 
-                width: "350px",
-                position: "absolute", 
-                top: "40px", 
-                right: "0", 
-                padding: "5px", 
-                backgroundColor: "#eee",
-                zIndex: "100"
+        <Menu
+            id="tagCreate-menu"
+            anchorEl={props.anchorEl}
+            open={Boolean(props.anchorEl)}
+            onClose={props.onClose}
+            sx={{
+                    ".css-6hp17o-MuiList-root-MuiMenu-list": {padding: "2px"},
                 }}
-                onSubmit={createTag}
+            anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+            }}
+            transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+            }}
             >
+            <Box sx={{display: "flex", padding: "5px"}} component="form" onSubmit={createTag}>
                 <TextField
+                    autoFocus
                     id="tagName"
                     name='tagName'
                     type="text"
@@ -59,8 +65,7 @@ const TagCreate = (props) => {
                         ".MuiOutlinedInput-notchedOutline" : { border: "none" },
                         ".MuiOutlinedInput-root" : { fontSize: "1rem" }
                     }}
-                    >
-                </TextField>
+                />
                 <Button 
                     type='submit'
                     variant='contained'
@@ -69,6 +74,8 @@ const TagCreate = (props) => {
                         完了
                 </Button>
             </Box>
+            {/* </Box> */}
+        </Menu>
     )
 }
 

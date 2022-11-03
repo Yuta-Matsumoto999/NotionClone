@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setProject } from '../redux/features/projectSlice';
 import EmojiPicker from "../components/common/EmojiPicker";
 import ProjectDeleteDialog from '../components/dialog/ProjectDeleteDialog';
-import TagCreate from '../components/form/TagCreate';
+import TagCreate from '../components/menu/TagCreate';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { setTag } from '../redux/features/tagSlice';
 import TagListGroup from '../components/listGroup/TagListGroup';
@@ -20,7 +20,7 @@ const Project = () => {
     const [icon, setIcon] = useState("");
     const [tags, setTags] = useState([]);
     const [isShowProjectDeleteDialog, setIsShowProjectDeleteDialog] = useState(false);
-    const [isShowTagCreate, setIsShowTagCreate] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null);
     const projects = useSelector((state) => state.project.value);
     const dispatch = useDispatch();
 
@@ -112,12 +112,12 @@ const Project = () => {
         }
     }
 
-    const handleTagCreateForm = (state) => {
-        if(state === false) {
-            setIsShowTagCreate(false);
-        } else {
-            setIsShowTagCreate(!isShowTagCreate);
-        }
+    const handleShowTagCreate = (e) => {
+        setAnchorEl(e.currentTarget);
+    }
+
+    const handleCloseTagCreate = () => {
+        setAnchorEl(null);
     }
 
     return (
@@ -176,8 +176,13 @@ const Project = () => {
                 </Grid>
             </Grid>
             <Box sx={{  textAlign: "right", position: "relative"}}>
-                <Button variant='outLined' size='small'onClick={handleTagCreateForm}><AddOutlinedIcon /></Button>
-                <TagCreate isShow={isShowTagCreate} onClick={handleTagCreateForm}/>
+                <Button variant='outLined' size='small'onClick={handleShowTagCreate}><AddOutlinedIcon /></Button>
+                <TagCreate
+                    aria-owns={anchorEl ? "tagCreate-menu" : undefined}
+                    aria-haspopup="true"
+                    anchorEl={anchorEl}
+                    onClose={handleCloseTagCreate}
+                />
             </Box>
             <TagListGroup/>
             <ProjectDeleteDialog isShow={isShowProjectDeleteDialog} projectName={projectName} handleClose={handleDeleteDialog} projectId={projectId}/>
