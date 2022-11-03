@@ -6,7 +6,6 @@ import { Box } from '@mui/material';
 
 const TagListGroup = () => {
     const tags = useSelector((state) => state.tag.value);
-    console.log(tags);
 
     const addItems = () => {
 

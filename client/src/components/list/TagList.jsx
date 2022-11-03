@@ -3,18 +3,18 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { Box, Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import TagMenu from '../menu/TagMenu';
+import TagUpdate from '../menu/TagUpdate';
 import { useState } from 'react';
 
 const TagList = (props) => {
-    const [isShowTagUpdate, setIsShowTagUpdate] = useState(false);
+    const [anchorEl, setAnchorEl] = useState(null); 
 
-    const handleShowTagUpdate = (state) => {
-        if(!state) {
-            setIsShowTagUpdate(false);
-        } else {
-            setIsShowTagUpdate(!isShowTagUpdate);
-        }
+    const handleShowTagUpdate = (e) => {
+        setAnchorEl(e.currentTarget);
+    }
+
+    const handleCloseTagUpdate = () => {
+        setAnchorEl(null);
     }
 
     return (
@@ -28,8 +28,14 @@ const TagList = (props) => {
                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                         <Typography sx={{padding: "1px 6px", backgroundColor: props.color, borderRadius: "3px"}} fontWeight="700" fontSize="14px">{props.tagName}</Typography>
                         <Box sx={{display: "flex", position: "relative"}}>
-                            <Typography><Button sx={{padding: "2px"}} onClick={handleShowTagUpdate}><MoreHorizOutlinedIcon fontSize='small'/></Button></Typography>
-                            <TagMenu isShow={isShowTagUpdate} tagId={props.tagId} onClick={handleShowTagUpdate}/>
+                            <Typography>
+                                <Button sx={{padding: "2px"}}
+                                    aria-owns={anchorEl ? "tagUpdate-menu" : undefined}
+                                    aria-haspopup="true"
+                                    onClick={handleShowTagUpdate}
+                                ><MoreHorizOutlinedIcon fontSize='small'/></Button>
+                            </Typography>
+                            <TagUpdate anchorEl={anchorEl} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor}/>
                             <Button sx={{padding: "2px"}}><AddOutlinedIcon fontSize='small' /></Button>
                         </Box>
                     </Box>
