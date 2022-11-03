@@ -76,10 +76,7 @@ exports.destroy = async (req, res) => {
     const { deleteProjectName } = req.body;
 
     try {
-        console.log(deleteProjectName);
         const existsProject = await Project.findOne({ user: req.user._id, _id: projectId, name: deleteProjectName });
-
-        console.log(existsProject);
 
         if(!existsProject) return res.status(404).json({
             errors: [
