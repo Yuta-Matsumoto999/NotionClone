@@ -39,10 +39,15 @@ exports.create = async (req, res) => {
 // タグの更新
 exports.update = async (req, res) => {
     const { tagId } = req.params;
+    const { name, color, visible, position } = req.body;
+
+    if(name === "") req.body.name = "無題";
 
     try {
-        const updatedTag = await Tag.findByIdAndUpdate(tagId, {
-            color: req.body.color
+        const updatedTag = await Tag.updateOne({_id: tagId}, {
+            name: req.body.name,
+            color: req.body.color,
+            visible: req.body.visible
         });
 
         res.status(200).json(updatedTag);
