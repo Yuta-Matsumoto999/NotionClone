@@ -24,20 +24,20 @@ const TagNameEdit = (props) => {
         setTagName(tag.name);
     },[tags]);
 
-    // const getTagNameValue = (e) => {
-    //     const tagNameValue = e.target.value;
-    //     setTagName(tagNameValue);
-    // }
-
     const updateTagName = async (e) => {
         e.preventDefault();
 
-        try {
+        try {        
             const res = await tagApi.update(currentTag._id, { name: tagName });
 
             let temp = [...tags];
             const index = tags.findIndex((e) => e._id === currentTag._id);
-            temp[index] = {...temp[index], name: tagName};
+
+            if(tagName === "") {
+                temp[index] = {...temp[index], name: "無題"};
+            } else { 
+                temp[index] = {...temp[index], name: tagName};
+            }
 
             dispatch(setTag(temp));
 
