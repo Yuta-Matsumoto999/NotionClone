@@ -42,14 +42,29 @@ const TagUpdate = (props) => {
     },[tags]);
 
     const updateTagColor = async (colorCode) => {
-        const tagId = currentTag._id;
-
         try {
-            const updatedTag = await tagApi.update(tagId, {color: colorCode});
+            const updatedTag = await tagApi.update(currentTag._id, {color: colorCode});
             
             let temp = [...tags];
-            const index = tags.findIndex((e) => e._id === tagId);
+            const index = tags.findIndex((e) => e._id === currentTag._id);
             temp[index] = {...temp[index], color: colorCode};
+
+            dispatch(setTag(temp));
+
+        } catch (err) {
+            alert(err);
+        }
+    }
+
+    const updateTagVisible = async () => {
+        try {
+            const updatedTag = await tagApi.update(currentTag._id, {
+                visible: false,
+            });
+
+            let temp = [...tags];
+            const index = tags.findIndex((e) => e._id === currentTag._id);
+            temp[index] = {...temp[index], visible: false};
 
             dispatch(setTag(temp));
 
@@ -84,7 +99,7 @@ const TagUpdate = (props) => {
                     horizontal: 'center',
                 }}
             >
-                <MenuItem>
+                <MenuItem onClick={updateTagVisible}>
                     <ListItemIcon>
                         <VisibilityOffOutlinedIcon fontSize="small" />
                     </ListItemIcon>
