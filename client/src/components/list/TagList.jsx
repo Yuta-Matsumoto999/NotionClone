@@ -6,8 +6,28 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import TagUpdate from '../menu/TagUpdate';
 import { useState } from 'react';
 import TagNameEdit from '../menu/TagNameEdit';
+import { makeStyles } from '@mui/styles';
 
 const TagList = (props) => {
+    const ButtonStyles = makeStyles({
+        tagNameButton: {
+            padding: "1px 6px",
+            borderRadius: "3px",
+            fontWeight: 700,
+            backgroundColor: props.color,
+            '&:hover': {
+                backgroundColor: props.color
+            },
+        },
+        tagOptionButton: {
+            display: "flex",
+            minWidth: "5px",
+            padding: "5px",
+        }
+    });
+
+    const classes = ButtonStyles();
+
     const [tagUpdateAnchor, setTagUpdateAnchor] = useState(null); 
 
     const [tagNameAnchor, setTagNameAnchor] = useState(null);
@@ -38,30 +58,29 @@ const TagList = (props) => {
                 >
                     <Box sx={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
                         <Button 
-                            sx={{
-                                    padding: "1px 6px", 
-                                    backgroundColor: props.color, 
-                                    borderRadius: "3px"
-                                }} 
+                                className={classes.tagNameButton}
                                 fontWeight="700" 
                                 fontSize="14px"
                                 aria-owns={tagNameAnchor ? "tagNameEdit-menu" : undefined}
                                 aria-haspopup="true"
                                 onClick={handleShowTagNameEdit}
+                                color="natural"
                         >
                             {props.tagName}
                         </Button>
                         <TagNameEdit anchorEl={tagNameAnchor} onClose={handleCloseTagNameEdit} tagName={props.tagName} tagId={props.tagId}/>
                         <Box sx={{display: "flex", position: "relative"}}>
                             <Typography>
-                                <Button sx={{padding: "2px"}}
+                                <Button
                                     aria-owns={tagUpdateAnchor ? "tagUpdate-menu" : undefined}
                                     aria-haspopup="true"
                                     onClick={handleShowTagUpdate}
+                                    className={classes.tagOptionButton}
+                                    color="natural"
                                 ><MoreHorizOutlinedIcon fontSize='small'/></Button>
                             </Typography>
                             <TagUpdate anchorEl={tagUpdateAnchor} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor} tagName={props.tagName}/>
-                            <Button sx={{padding: "2px"}}><AddOutlinedIcon fontSize='small' /></Button>
+                            <Button className={classes.tagOptionButton} color="natural"><AddOutlinedIcon fontSize='small' /></Button>
                         </Box>
                     </Box>
                     {props.memos.map((item, index) => (
