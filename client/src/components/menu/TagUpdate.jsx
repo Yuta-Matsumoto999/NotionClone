@@ -9,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import DoneIcon from '@mui/icons-material/Done';
 import colorApi from '../../api/colorApi';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -28,18 +29,22 @@ const TagUpdate = (props) => {
 
     useEffect(() => {
         const getColors = async () => {
-            const colors = await colorApi.getAll();
-            setColors(colors);
+            if(Boolean(props.anchorEl)) {
+                const colors = await colorApi.getAll();
+                setColors(colors);
+            }
         };
         getColors();
-    },[]);
+    },[props.anchorEl]);
 
     useEffect(() => {
-        const tagId = props.tagId;
-        const index = tags.findIndex((e) => e._id === tagId);
-        const tag = tags[index];
-        setCurrentTag(tag);
-    },[tags]);
+        if(Boolean(props.anchorEl)) {
+            const tagId = props.tagId;
+            const index = tags.findIndex((e) => e._id === tagId);
+            const tag = tags[index];
+            setCurrentTag(tag);
+        }
+    },[props.anchorEl]);
 
     const updateTagColor = async (colorCode) => {
         try {
@@ -56,15 +61,17 @@ const TagUpdate = (props) => {
         }
     }
 
-    const updateTagVisible = async () => {
+    const updateTagVisible = async () => { 
+        const visible = props.tagVisible;
+
         try {
             const updatedTag = await tagApi.update(currentTag._id, {
-                visible: false,
+                visible: !visible
             });
 
             let temp = [...tags];
             const index = tags.findIndex((e) => e._id === currentTag._id);
-            temp[index] = {...temp[index], visible: false};
+            temp[index] = {...temp[index], visible: !visible};
 
             dispatch(setTag(temp));
 
@@ -101,9 +108,15 @@ const TagUpdate = (props) => {
             >
                 <MenuItem onClick={updateTagVisible}>
                     <ListItemIcon>
-                        <VisibilityOffOutlinedIcon fontSize="small" />
+                        {props.tagVisible
+                            ? <VisibilityOffOutlinedIcon fontSize="small" />
+                            : <VisibilityIcon fontSize='small' />
+                        }
                     </ListItemIcon>
-                    <ListItemText sx={{".css-10hburv-MuiTypography-root": {fontSize: "0.88rem"}}}>非表示</ListItemText>
+                    {props.tagVisible
+                        ? <ListItemText sx={{".css-10hburv-MuiTypography-root": {fontSize: "0.88rem"}}}>非表示</ListItemText>
+                        : <ListItemText sx={{".css-10hburv-MuiTypography-root": {fontSize: "0.88rem"}}}>表示</ListItemText>
+                    }
                 </MenuItem>
                 <MenuItem onClick={handleShowTagDelete}>
                     <ListItemIcon>
