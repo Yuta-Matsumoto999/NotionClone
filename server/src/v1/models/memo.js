@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const tag = require("../models/tag");
+
 const memoSchema = new mongoose.Schema({
     tag: {
         type: mongoose.Schema.Types.ObjectId,
@@ -29,6 +31,19 @@ const memoSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-});
+}, 
+{
+    timestamps: true
+}
+);
+
+memoSchema.pre("remove", async function(next) {
+    var memo = this;
+    await tag.updateOne(
+        {_id: memo.tag},
+        {$pull: {memos: memo._id}}
+    )
+    return next();
+})
 
 module.exports = mongoose.model("Memo", memoSchema);

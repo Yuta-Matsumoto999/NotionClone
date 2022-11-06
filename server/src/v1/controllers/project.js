@@ -77,9 +77,10 @@ exports.destroy = async (req, res) => {
     const { deleteProjectName } = req.body;
 
     try {
-        const existsProject = await Project.findOne({ user: req.user._id, _id: projectId, name: deleteProjectName });
+        // 削除対象のprojectをネストされたObjectも含めて取得
+        const deleteTargetProject = await Project.findOne({ user: req.user._id, _id: projectId, name: deleteProjectName }).populate({path: "tags", populate: {path: "memos"}});
 
-        if(!existsProject) return res.status(404).json({
+        if(!deleteTargetProject) return res.status(404).json({
             errors: [
                 {
                     param: "deleteProjectName",
@@ -88,18 +89,8 @@ exports.destroy = async (req, res) => {
             ]
         });
 
-        // プロジェクトに作成されたメモを全件取得
-        // ここに記述
-
-        // console.log(memos);
-
-        // 取得したメモを1件ずつ削除
-        // memos.forEach(async (el) => {
-        //     await Memo.deleteOne({ user: req.user._id, id: memo._id });
-        // });
-
-        // プロジェクトを削除
-        await Project.deleteOne({ user: req.user._id, _id: projectId, name: deleteProjectName });
+        
+        deleteTargetProject.remove();
 
         res.status(200).json("プロジェクトの削除が完了しました。");
 

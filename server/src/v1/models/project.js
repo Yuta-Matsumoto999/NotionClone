@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const memo = require("../models/memo");
+
 const projectSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -33,5 +35,38 @@ const projectSchema = new mongoose.Schema({
         ref: "Tag"
     }]
 });
+
+projectSchema.pre("remove", async function(next) {
+    var project = this;
+
+    // projectのtagsの_idを格納
+    let deleteTargetProjectTagsId = [];
+
+    // tagsの子memoの_idを格納
+    let deleteTargetProjectTagsChildMemosId = [];
+
+    project.tags.forEach((tag) => {
+        deleteTargetProjectTagsId.push(String(tag._id));
+        tag.memos.forEach((memo) => {
+            deleteTargetProjectTagsChildMemosId.push(String(memo._id));
+        })
+    });
+    
+    // projectのtagsをまとめて削除
+    await project.model("Tag").deleteMany({
+        _id: {
+            $in: deleteTargetProjectTagsId
+        }
+    });
+
+    // projectのtagsの子memosをまとめて削除
+    await memo.deleteMany({
+        _id: {
+            $in: deleteTargetProjectTagsChildMemosId
+        }
+    });
+
+    return next();
+})
 
 module.exports = mongoose.model("Project", projectSchema);

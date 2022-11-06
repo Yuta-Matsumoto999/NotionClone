@@ -1,4 +1,5 @@
-const { findByIdAndUpdate } = require("../models/memo");
+const { remove } = require("../models/memo");
+const memo = require("../models/memo");
 const project = require("../models/project");
 const Tag = require("../models/tag");
 
@@ -61,7 +62,10 @@ exports.delete = async (req, res) => {
     const { tagId } = req.params;
 
     try {
-        await Tag.findByIdAndDelete(tagId);
+        const deleteTargetTag = await Tag.findById(tagId);
+
+        deleteTargetTag.remove();
+
         res.status(200).json("タグの削除が完了しました。");
     } catch (err) {
         res.status(500).json(err);
