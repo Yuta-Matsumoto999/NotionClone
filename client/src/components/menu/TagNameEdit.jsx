@@ -17,12 +17,15 @@ const TagNameEdit = (props) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const tagId = props.tagId;
-        const index = tags.findIndex((e) => e._id === tagId);
-        const tag = tags[index];
-        setCurrentTag(tag);
-        setTagName(tag.name);
-    },[tags]);
+        if(Boolean(props.anchorEl)) {
+            const tagId = props.tagId;
+            const index = tags.findIndex((e) => e._id === tagId);
+            const tag = tags[index];
+            setCurrentTag(tag);
+            setTagName(tag.name);
+            console.log(tags);
+        }
+    },[props.anchorEl]);
 
     const updateTagName = async (e) => {
         e.preventDefault();
