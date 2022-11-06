@@ -1,3 +1,4 @@
+const { populate } = require("../models/memo");
 const Memo = require("../models/memo");
 const Project = require("../models/project");
 const Tag = require("../models/tag");
@@ -33,8 +34,8 @@ exports.getOne = async (req, res) => {
     const { projectId } = req.params;
 
     try {
-        const project = await Project.findOne({user: req.user._id, _id: projectId}).populate("tags");
-
+        const project = await Project.findOne({user: req.user._id, _id: projectId}).populate({path: "tags", populate: {path: "memos"}});
+        
         if(!project) return res.status(404).json("プロジェクトが存在しません。");
 
         res.status(200).json(project);
