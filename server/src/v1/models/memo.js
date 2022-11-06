@@ -1,10 +1,5 @@
 const mongoose = require("mongoose");
 const memoSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true
-    },
     tag: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Tag",
