@@ -23,7 +23,7 @@ const tagSchema = new mongoose.Schema({
     },
     memos: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: "memo"
+        ref: "Memo"
     }]
 });
 
