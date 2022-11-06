@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient";
 
 const memoApi = {
-    create: () => axiosClient.post("memo"), 
+    create: (tagId) => axiosClient.post(`memo/${tagId}`), 
     getAll: () => axiosClient.get("memo"),
     getAllByTagId: (tagId) => axiosClient(`memo/byTag/${tagId}`),
     getOne: (id) => axiosClient.get(`/memo/${id}`),
