@@ -3,6 +3,7 @@ import TagList from '../list/TagList';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from "react-redux";
 import { Box } from '@mui/material';
+import HiddenTagListGroup from './HiddenListGroup';
 
 const TagListGroup = () => {
     const tags = useSelector((state) => state.tag.value);
@@ -21,11 +22,13 @@ const TagListGroup = () => {
                     id={item._id}
                     tagName={item.name}
                     tagId={item._id}
-                    color={item.color}
+                    tagColor={item.color}
+                    tagVisible={item.visible}
                     memos={item.memos}
                     AddItems={addItems}
                     />
                 )}
+                <HiddenTagListGroup />
             </Box>
         </DragDropContext>
     )
