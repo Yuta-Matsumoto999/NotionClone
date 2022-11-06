@@ -9,24 +9,26 @@ import TagNameEdit from '../menu/TagNameEdit';
 import { makeStyles } from '@mui/styles';
 
 const TagList = (props) => {
-    const ButtonStyles = makeStyles({
+    const buttonStyles = makeStyles({
         tagNameButton: {
-            padding: "1px 6px",
+            padding: "1px",
             borderRadius: "3px",
             fontWeight: 700,
-            backgroundColor: props.color,
+            backgroundColor: props.tagColor,
             '&:hover': {
-                backgroundColor: props.color
+                backgroundColor: props.tagColor
             },
+            height: "1.3rem"
         },
         tagOptionButton: {
             display: "flex",
             minWidth: "5px",
             padding: "5px",
+            height: "1.3rem"
         }
     });
 
-    const classes = ButtonStyles();
+    const classes = buttonStyles();
 
     const [tagUpdateAnchor, setTagUpdateAnchor] = useState(null); 
 
@@ -49,7 +51,7 @@ const TagList = (props) => {
     }
 
     return (
-        <Box sx={{margin: "0 20px", textAlign: "left"}} width="25%">
+        <Box sx={{margin: "0 20px", textAlign: "left"}} width="300px">
             <Droppable droppableId={props.id}>
                 {(provided, snapshot) => (
                 <div
@@ -60,7 +62,7 @@ const TagList = (props) => {
                         <Button 
                                 className={classes.tagNameButton}
                                 fontWeight="700" 
-                                fontSize="14px"
+                                fontSize="0.875rem"
                                 aria-owns={tagNameAnchor ? "tagNameEdit-menu" : undefined}
                                 aria-haspopup="true"
                                 onClick={handleShowTagNameEdit}
@@ -79,7 +81,7 @@ const TagList = (props) => {
                                     color="natural"
                                 ><MoreHorizOutlinedIcon fontSize='small'/></Button>
                             </Typography>
-                            <TagUpdate anchorEl={tagUpdateAnchor} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor} tagName={props.tagName}/>
+                            <TagUpdate anchorEl={tagUpdateAnchor} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor} tagName={props.tagName} tagVisible={props.tagVisible}/>
                             <Button className={classes.tagOptionButton} color="natural"><AddOutlinedIcon fontSize='small' /></Button>
                         </Box>
                     </Box>
