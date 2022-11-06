@@ -59,23 +59,6 @@ const HiddenList = (props) => {
                         </ListItemButton>
                         <MemosByHiddenTag anchorEl={hiddenTagAnchor} onClose={handleCloseHiddenTagContent} tagId={props.tagId} tagColor={props.tagColor} tagName={props.tagName} tagVisible={props.tagVisible}/>
                     </Box>
-                    {props.memos.map((item, index) => (
-                    <Draggable key={item.id} draggableId={item.tag} index={index}>
-                        {(provided) => (
-                            <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                            >
-                                <Box sx={{display: "flex", border: "solid 1px #eee", borderRadius: "3px", padding: "1px 3px"}}>
-                                    <Typography fontWeight="700">{item.title}</Typography>
-                                </Box>
-                            </div>
-                        )}
-                    </Draggable>
-                    ))}
-                    {provided.placeholder}
-                    {/* <button className="Add-item-btn" onClick={() => props.onAddItems(props.id)}></button> */}
                 </div>
                 )}
             </Droppable>

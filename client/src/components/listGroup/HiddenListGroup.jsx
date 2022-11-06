@@ -21,7 +21,6 @@ const HiddenTagListGroup = () => {
                       tagId={item._id}
                       tagColor={item.color}
                       tagVisible={item.visible}
-                      memos={item.memos}
                       />
                   )}
               </Box>
