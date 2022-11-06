@@ -79,3 +79,16 @@ exports.delete = async (req, res) => {
         res.status(500).json(err);
     }
 }
+
+// メモをタグごとに全件取得
+exports.getAllByTagId = async (req, res) => {
+    const { tagId } = req.params;
+    
+    try {
+        const memos = await Memo.find({ tag: tagId });
+
+        res.status(200).json(memos);
+    } catch (err) {
+        res.status(500).json(err);
+    }
+}

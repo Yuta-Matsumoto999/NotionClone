@@ -18,5 +18,8 @@ router.put("/:memoId", tokenHandler.verifyToken, memoController.update);
 // メモを削除
 router.delete("/:memoId", tokenHandler.verifyToken, memoController.delete);
 
+// tagごとにメモを取得
+router.get("/byTag/:tagId", tokenHandler.verifyToken, memoController.getAllByTagId);
+
 module.exports = router;
 
