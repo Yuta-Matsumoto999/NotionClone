@@ -1,15 +1,31 @@
 const Memo = require("../models/memo");
+const Tag = require("../models/tag");
 
 exports.create = async (req, res) => {
+    const { tagId } = req.params;
+
     try {
         // 保存されているメモの個数を取得
-        const memoCount = await Memo.find({user: req.user._id}).count();
+        const memoCount = await Memo.find({tag: tagId}).count();
+
         // メモ新規作成
-        const memo = await Memo.create({ 
-            user: req.user._id,
+        const newMemo = await Memo.create({ 
+            tag: tagId,
             position: memoCount > 0 ? memoCount : 0,
         });
-        res.status(201).json(memo);
+
+         // メモを追加するタグを取得
+        const existsTag = await Tag.findOne({ _id: tagId });
+
+        // 取得したプロジェクトのmemos配列に新しいmemoを追加
+        const memos = [...existsTag.memos, newMemo._id];
+
+        // タグを追加するプロジェクトのtagsを更新
+        const updatedTag = await Tag.findByIdAndUpdate(tagId, {
+            memos: memos
+        });
+
+        res.status(201).json(newMemo);
     } catch {
         res.status(500).json(err);
     }
