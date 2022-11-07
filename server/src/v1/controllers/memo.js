@@ -61,11 +61,10 @@ exports.update = async (req, res) => {
     const { title, description } = req.body;
 
     try {
-
         if(title === "") req.body.title = "無題";
         if(description === "") req.body.description = "ここに自由に記入してください。";
 
-        const memo = await Memo.findOne({ user: req.user._id, id: memoId });
+        const memo = await Memo.findOne({ id: memoId });
 
         if(!memo) return res.status(404).json("メモが存在しません。");
 
