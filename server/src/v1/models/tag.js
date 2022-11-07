@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const project = require("../models/project");
-const memo = require("../models/memo");
 
 const tagSchema = new mongoose.Schema({
     project: {
@@ -34,7 +32,7 @@ tagSchema.pre("remove", async function(next) {
     var tag = this;
 
     // 親projectから削除するtagを取り除く
-    await project.updateOne(
+    await tag.model("Project").updateOne(
         {_id: tag.project},
         {$pull: {tags: tag._id}},
     );
@@ -47,7 +45,7 @@ tagSchema.pre("remove", async function(next) {
         deleteTargetTagChildMemoIds.push(String(memo._id));
     });
 
-    await memo.deleteMany({
+    await tag.model("Memo").deleteMany({
         _id : {
             $in: deleteTargetTagChildMemoIds
         },
