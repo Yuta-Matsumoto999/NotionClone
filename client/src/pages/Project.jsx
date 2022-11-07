@@ -11,7 +11,8 @@ import ProjectDeleteDialog from '../components/dialog/ProjectDeleteDialog';
 import TagCreate from '../components/menu/TagCreate';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 import { setTag } from '../redux/features/tagSlice';
-import TagListGroup from '../components/listGroup/TagListGroup';
+import TagList from '../components/list/TagList';
+import { setMemo } from '../redux/features/memoSlice';
 
 const Project = () => {
     const { projectId } = useParams();
@@ -35,6 +36,16 @@ const Project = () => {
                 setTags(project.tags);
 
                 dispatch(setTag(project.tags));
+
+                let memos = [];
+
+                project.tags.forEach((tag) => {
+                    tag.memos.forEach((memo) => {
+                        memos.push(memo);
+                    })
+                });
+
+                dispatch(setMemo(memos));
             } catch (err) {
                 alert(err);
             }
@@ -184,7 +195,7 @@ const Project = () => {
                     onClose={handleCloseTagCreate}
                 />
             </Box>
-            <TagListGroup/>
+            <TagList />
             <ProjectDeleteDialog isShow={isShowProjectDeleteDialog} projectName={projectName} handleClose={handleDeleteDialog} projectId={projectId}/>
         </Box>
     )
