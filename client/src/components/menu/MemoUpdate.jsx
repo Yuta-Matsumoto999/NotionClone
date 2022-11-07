@@ -10,13 +10,16 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ModeEditOutlineIcon from '@mui/icons-material/ModeEditOutline';
 import DeleteIcon from '@mui/icons-material/Delete';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
 import memoApi from '../../api/memoApi';
 import { useSelector, useDispatch } from "react-redux";
 import { setMemo } from '../../redux/features/memoSlice';
+import MemoNameEdit from './MemoNameEdit';
 
 const MemoUpdate = (props) => {
     const memos = useSelector((state) => state.memo.value);
     const dispatch = useDispatch();
+    const [memoNameEditAnchor, setMenuNameEditAnchor] = useState(null);
 
     const deleteMemo = async () => {
         const memoId = props.memoId;
@@ -35,6 +38,13 @@ const MemoUpdate = (props) => {
         } catch (err) {
             alert(err);
         }
+    }
+
+    const handleShowMenuNameEdit = (e) => {
+        setMenuNameEditAnchor(e.currentTarget);
+    }
+    const handleCloseMenuNameEdit = () => {
+        setMenuNameEditAnchor(null);
     }
 
     return (
@@ -61,15 +71,21 @@ const MemoUpdate = (props) => {
                     </ListItemIcon>
                         <ListItemText sx={{".css-10hburv-MuiTypography-root": {fontSize: "0.88rem"}}}>削除</ListItemText>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem
+                    onClick={handleShowMenuNameEdit}
+                    aria-owns={setMenuNameEditAnchor ? "menuNameEdit-menu" : undefined}
+                    aria-haspopup="true"
+                    onClose={handleCloseMenuNameEdit}
+                >
                     <ListItemIcon>
                         <ModeEditOutlineIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText sx={{".css-10hburv-MuiTypography-root": {fontSize: "0.88rem"}}}>名前の変更</ListItemText>
                 </MenuItem>
+                <MemoNameEdit anchorEl={memoNameEditAnchor} onClose={handleCloseMenuNameEdit} memoName={props.memoName} memoId={props.memoId}/>
                 <MenuItem>
                     <ListItemIcon>
-                        <ModeEditOutlineIcon fontSize="small" />
+                        <FileCopyIcon fontSize="small" />
                     </ListItemIcon>
                     <ListItemText sx={{".css-10hburv-MuiTypography-root": {fontSize: "0.88rem"}}}>複製</ListItemText>
                 </MenuItem>
