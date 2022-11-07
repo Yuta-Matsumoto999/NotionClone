@@ -11,12 +11,20 @@ import { makeStyles } from '@mui/styles';
 import memoApi from '../../api/memoApi';
 import MemoItem from './MemoItem';
 import { setMemo } from '../../redux/features/memoSlice';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 
 const TagList = (props) => {
     const memos = useSelector((state) => state.memo.value);
     const dispatch =useDispatch();
+    const [memosThisTag, setMemosThisTag] = useState([]);
     const [tagUpdateAnchor, setTagUpdateAnchor] = useState(null); 
     const [tagNameAnchor, setTagNameAnchor] = useState(null);
+
+    useEffect(() => {
+        let filterMemosThisTag = memos.filter((e) => e.tag === props.tagId);
+        setMemosThisTag(filterMemosThisTag);
+    }, [memos]);
 
     const useStyles = makeStyles({
         tagNameButton: {
@@ -119,7 +127,7 @@ const TagList = (props) => {
                             <Button className={classes.optionButton} color="natural" onClick={addMemo}><AddOutlinedIcon fontSize='small' /></Button>
                         </Box>
                     </Box>
-                    {props.memos.map((item, index) => (
+                    {memosThisTag.map((item, index) => (
                     <Draggable key={item._id} draggableId={item.tag} index={index}>
                         {(provided) => (
                             <div
