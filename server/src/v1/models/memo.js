@@ -39,7 +39,7 @@ const memoSchema = new mongoose.Schema({
 
 memoSchema.pre("remove", async function(next) {
     var memo = this;
-    await tag.updateOne(
+    await memo.model("Tag").updateOne(
         {_id: memo.tag},
         {$pull: {memos: memo._id}}
     )
