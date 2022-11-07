@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const memo = require("../models/memo");
 
 const projectSchema = new mongoose.Schema({
     user: {
@@ -42,27 +41,28 @@ projectSchema.pre("remove", async function(next) {
     // projectのtagsの_idを格納
     let deleteTargetProjectTagsId = [];
 
-    // tagsの子memoの_idを格納
-    let deleteTargetProjectTagsChildMemosId = [];
-
-    project.tags.forEach((tag) => {
+    project.tags.forEach(async (tag) => {
         deleteTargetProjectTagsId.push(String(tag._id));
-        tag.memos.forEach((memo) => {
+
+        // tagsの子memoの_idを格納
+        let deleteTargetProjectTagsChildMemosId = [];
+
+        tag.memos.forEach(async (memo) => {
             deleteTargetProjectTagsChildMemosId.push(String(memo._id));
-        })
+        });
+
+        // tagの子memoをすべて削除
+        await tag.model("Memo").deleteMany({
+            _id: {
+                $in: deleteTargetProjectTagsChildMemosId
+            }
+        });
     });
-    
+
     // projectのtagsをまとめて削除
     await project.model("Tag").deleteMany({
         _id: {
             $in: deleteTargetProjectTagsId
-        }
-    });
-
-    // projectのtagsの子memosをまとめて削除
-    await memo.deleteMany({
-        _id: {
-            $in: deleteTargetProjectTagsChildMemosId
         }
     });
 
