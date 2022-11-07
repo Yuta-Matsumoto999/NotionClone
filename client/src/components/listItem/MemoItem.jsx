@@ -49,7 +49,6 @@ const MemoItem = (props) => {
     }
 
     const handleShowMemoUpdate = (e) => {
-        console.log(e.currentTarget);
         setMemoUpdateAnchor(e.currentTarget);
     }
 
@@ -63,7 +62,7 @@ const MemoItem = (props) => {
             id={props.memo._id}
             className={classes.memoItem}
             onMouseEnter={hoverMemoItem}
-            onMouseLeave={leaveMemoItem}
+            onMouseLeave={memoUpdateAnchor == null ? leaveMemoItem : undefined}
         >
             <Box sx={{position: "relative"}}>
                 {props.memo.description !== "" &&
@@ -82,7 +81,7 @@ const MemoItem = (props) => {
                     >
                         <MoreHorizOutlinedIcon fontSize='small'/>
                     </Button>
-                    <MemoUpdate anchorEl={memoUpdateAnchor} onClose={handleCloseMemoUpdate} memoId={props.memo._id}/>
+                    <MemoUpdate anchorEl={memoUpdateAnchor} onClose={handleCloseMemoUpdate} memoId={props.memo._id} memoName={props.memo.title}/>
                 </Card>
                 <Box sx={{display: "flex", alignItems: "center", padding: "8px", borderTop: "solid 1px #eee"}}>
                     <StickyNote2Icon />
