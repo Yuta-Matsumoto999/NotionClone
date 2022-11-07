@@ -1,11 +1,11 @@
 import React from 'react'
-import TagList from '../listItem/TagItem';
+import TagItem from '../listItem/TagItem';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from "react-redux";
 import { Box } from '@mui/material';
-import HiddenTagListGroup from './HiddenListGroup';
+import HiddenList from './HiddenList';
 
-const TagListGroup = () => {
+const TagList = () => {
     const tags = useSelector((state) => state.tag.value);
 
     const addItems = () => {
@@ -17,7 +17,7 @@ const TagListGroup = () => {
             <Box sx={{display: "flex"}}>
                 {tags.map((item, index) => 
                     item.visible === true &&
-                    <TagList 
+                    <TagItem 
                     key={index} 
                     id={item._id}
                     tagName={item.name}
@@ -28,10 +28,10 @@ const TagListGroup = () => {
                     AddItems={addItems}
                     />
                 )}
-                <HiddenTagListGroup />
+                <HiddenList />
             </Box>
         </DragDropContext>
     )
 }
 
-export default TagListGroup;
+export default TagList;
