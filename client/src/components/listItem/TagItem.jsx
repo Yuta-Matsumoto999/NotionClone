@@ -1,19 +1,23 @@
 import React from 'react';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
-import { Box, Button, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, Grid, IconButton, Menu, TextField, Typography } from '@mui/material';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
-import StickyNote2Icon from '@mui/icons-material/StickyNote2';
 import TagUpdate from '../menu/TagUpdate';
 import { useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import TagNameEdit from '../menu/TagNameEdit';
 import { makeStyles } from '@mui/styles';
 import memoApi from '../../api/memoApi';
+import MemoItem from './MemoItem';
+import { setMemo } from '../../redux/features/memoSlice';
 
 const TagList = (props) => {
+    const memos = useSelector((state) => state.memo.value);
+    const dispatch =useDispatch();
+    const [tagUpdateAnchor, setTagUpdateAnchor] = useState(null); 
+    const [tagNameAnchor, setTagNameAnchor] = useState(null);
+
     const useStyles = makeStyles({
         tagNameButton: {
             padding: "1px",
@@ -25,19 +29,36 @@ const TagList = (props) => {
             },
             height: "1.3rem",
         },
-        tagOptionButton: {
+        optionButton: {
             display: "flex",
             minWidth: "5px",
             padding: "5px",
             height: "1.3rem"
         },
+        memoItem: {
+            minWidth: 275,
+            margin: "8px 0",
+            boxShadow: "rgb(15 15 15 / 10%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 2px 4px",
+        },
+        hoverMemoItem: {
+            minWidth: 275,
+            margin: "8px 0",
+            boxShadow: "rgb(15 15 15 / 10%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 2px 4px",
+            backgroundColor: "rgba(55, 53, 47, 0.03)"
+        },
+        showMemoItemOptions: {
+            display: "flex",
+            alignItems: "center",
+            position: "absolute",
+            top: 5,
+            right: 5
+        },
+        closeMemoItemOptions: {
+            display: "none",
+        },
     });
 
     const classes = useStyles();
-
-    const [tagUpdateAnchor, setTagUpdateAnchor] = useState(null); 
-
-    const [tagNameAnchor, setTagNameAnchor] = useState(null);
 
     const handleShowTagUpdate = (e) => {
         setTagUpdateAnchor(e.currentTarget);
@@ -58,7 +79,9 @@ const TagList = (props) => {
     const addMemo = async () => {
         const tagId = props.tagId;
         const newMemo = await memoApi.create(tagId);
-        console.log(newMemo);
+    
+        const newMemos = [...memos, newMemo];
+        dispatch(setMemo(newMemos));
     }
 
     return (
@@ -88,12 +111,12 @@ const TagList = (props) => {
                                     aria-owns={tagUpdateAnchor ? "tagUpdate-menu" : undefined}
                                     aria-haspopup="true"
                                     onClick={handleShowTagUpdate}
-                                    className={classes.tagOptionButton}
+                                    className={classes.optionButton}
                                     color="natural"
                                 ><MoreHorizOutlinedIcon fontSize='small'/></Button>
                             </Typography>
                             <TagUpdate anchorEl={tagUpdateAnchor} onClose={handleCloseTagUpdate} tagId={props.tagId} tagColor={props.tagColor} tagName={props.tagName} tagVisible={props.tagVisible}/>
-                            <Button className={classes.tagOptionButton} color="natural" onClick={addMemo}><AddOutlinedIcon fontSize='small' /></Button>
+                            <Button className={classes.optionButton} color="natural" onClick={addMemo}><AddOutlinedIcon fontSize='small' /></Button>
                         </Box>
                     </Box>
                     {props.memos.map((item, index) => (
@@ -104,19 +127,7 @@ const TagList = (props) => {
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
                             >
-                                <Card sx={{ minWidth: 275, margin: "8px 0", boxShadow: "rgb(15 15 15 / 10%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 2px 4px"}}>
-                                    <Box>
-                                        {item.description !== "" &&
-                                            <Box sx={{backgroundColor: "#f5f5f5"}}>
-                                                <Typography sx={{padding: "10px"}}>{item.description}</Typography>                                            
-                                            </Box>
-                                        }
-                                        <Box sx={{display: "flex", alignItems: "center", padding: "8px", borderTop: "solid 1px #eee"}}>
-                                            <StickyNote2Icon />
-                                            <Typography fontWeight="700">{item.title}</Typography>
-                                        </Box>
-                                    </Box>
-                                </Card>
+                                <MemoItem memo={item}/>
                             </div>
                         )}
                     </Draggable>

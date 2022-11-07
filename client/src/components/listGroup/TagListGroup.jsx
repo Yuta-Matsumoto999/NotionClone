@@ -1,5 +1,5 @@
 import React from 'react'
-import TagList from '../list/TagList';
+import TagList from '../listItem/TagItem';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useSelector, useDispatch } from "react-redux";
 import { Box } from '@mui/material';
